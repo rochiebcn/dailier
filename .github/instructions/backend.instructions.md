@@ -111,20 +111,17 @@ Every new feature **must** include all of the following:
 - On match, calls `DailySenderUseCase.sendScheduledDaily()` which looks up tomorrow's `DailyEntry` and sends it via `SmtpDailySenderAdapter`.
 - Errors are logged and swallowed ? the scheduler must never crash.
 
-### SMTP configuration (do NOT change defaults without a reason)
+### SMTP configuration
 
 ```yaml
 spring:
   mail:
-    host: ${MAIL_HOST:relay.werfen.com}
-    port: ${MAIL_PORT:25}
-    from: ${MAIL_FROM:tao@tao.com}
-    properties:
-      mail.smtp.auth: false
-      mail.smtp.starttls.enable: false
+    from: ${MAIL_FROM:yourdaily@dailier.com}
 ```
 
-> `auth: false` and `starttls.enable: false` are intentional ? the corporate relay requires no authentication.
+> `host` and `port` are read dynamically from the `settings` table (`mail_host`, `mail_port`) at send time. Default port is 25. `auth: false` and `starttls.enable: false` are set programmatically in `SmtpDailySenderAdapter`.
+
+> The test `application.yaml` overrides `spring.mail.from` with a dummy value (`from: test@test.com`) so tests pass without a real SMTP server.
 
 ---
 

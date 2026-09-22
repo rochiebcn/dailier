@@ -1,4 +1,4 @@
 Steps for E2E testing with WebdriverIO and MCP:
 1. **Open Chrome**: Start by launching the Chrome browser using WebdriverIO. Ensure that you have the necessary WebDriver and browser drivers installed and configured.
 2. **Go to dailier app**: Navigate to the URL where your Dailier application is running `http://localhost:4201`.
-3. **Verify page load**: Wait for the page to load completely. You can check for the presence of a specific element that indicates the page has loaded, such as a header or a unique identifier. Take a screenshot to confirm the page is displayed correctly. Save the screenshot into the `./screenshots` directory with a descriptive name, e.g., `dailier-homepage.png`.
+3. **Verify page load**: Wait for the page to load completely. You can check for the presence of a specific element that indicates the page has loaded, such as a header or a unique identifier.

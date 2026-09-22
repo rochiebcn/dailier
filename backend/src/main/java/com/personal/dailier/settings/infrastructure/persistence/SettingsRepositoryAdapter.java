@@ -40,7 +40,9 @@ public class SettingsRepositoryAdapter implements SettingsRepository {
                 entity.getNotificationTime(),
                 entity.getDailyHour(),
                 entity.getSendTime(),
-                entity.getEmailAddress()
+                entity.getEmailAddress(),
+                entity.getMailHost(),
+                entity.getMailPort()
         );
     }
 
@@ -52,6 +54,8 @@ public class SettingsRepositoryAdapter implements SettingsRepository {
                 .dailyHour(domain.dailyHour())
                 .sendTime(domain.sendTime())
                 .emailAddress(domain.emailAddress())
+                .mailHost(domain.mailHost())
+                .mailPort(domain.mailPort())
                 .build();
     }
 }

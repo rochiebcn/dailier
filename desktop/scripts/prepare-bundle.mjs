@@ -23,10 +23,15 @@ const appBackendDir = path.join(appDir, 'backend');
 const appFrontendDir = path.join(appDir, 'frontend');
 
 function resolveBin(command) {
-  if (process.platform === 'win32') {
-    return `${command}.cmd`;
+  if (process.platform !== 'win32') {
+    return command;
   }
-  return command;
+
+  if (command.endsWith('.cmd') || command.endsWith('.exe')) {
+    return command;
+  }
+
+  return `${command}.cmd`;
 }
 
 function run(command, commandArgs, cwd) {
@@ -34,8 +39,12 @@ function run(command, commandArgs, cwd) {
   const result = spawnSync(resolveBin(command), commandArgs, {
     cwd,
     stdio: 'inherit',
-    shell: false
+    shell: process.platform === 'win32'
   });
+
+  if (result.error) {
+    throw result.error;
+  }
 
   if (result.status !== 0) {
     throw new Error(`Fallo ejecutando: ${command} ${commandArgs.join(' ')}`);
@@ -62,7 +71,7 @@ function findBackendJar() {
   }
 
   const files = readdirSync(targetDir)
-    .filter((name) => name.startsWith('dailier-backend-') && name.endsWith('.jar') && !name.startsWith('dailier-backend-0.0.1-SNAPSHOT.jar.original'))
+    .filter((name) => name.startsWith('dailier-backend-') && name.endsWith('.jar') && !name.endsWith('.jar.original'))
     .map((name) => path.join(targetDir, name))
     .sort((a, b) => statSync(b).mtimeMs - statSync(a).mtimeMs);
 
@@ -101,11 +110,11 @@ function copyBundleAssets() {
 }
 
 try {
-  if (!skipBuild) {
+  if (skipBuild) {
+    console.log('Build omitido (--skip-build/--dry-run).');
+  } else {
     run(path.join(repoRoot, 'mvnw.cmd'), ['-q', '-pl', 'backend', '-DskipTests', 'package'], repoRoot);
     run('npm', ['run', 'build'], frontendDir);
-  } else {
-    console.log('Build omitido (--skip-build/--dry-run).');
   }
 
   if (isDryRun) {
@@ -118,4 +127,5 @@ try {
   console.error(error.message);
   process.exit(1);
 }
+
 

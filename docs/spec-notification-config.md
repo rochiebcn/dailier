@@ -78,7 +78,7 @@ Package: `com.personal.dailier.notification.infrastructure.persistence`
 | `id` | `INTEGER` | PK, auto-increment |
 | `notification_time` | `VARCHAR(5)` | NOT NULL |
 
-Defined in Liquibase changeset `001` ? `src/main/resources/db/changelog/001-initial-schema.xml`.
+Defined in Liquibase changeset `001` ? `backend/src/main/resources/db/changelog/001-initial-schema.xml`.
 
 ### REST Controller
 Package: `com.personal.dailier.notification.infrastructure.rest`  

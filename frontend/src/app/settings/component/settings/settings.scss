@@ -1,5 +1,5 @@
 .settings {
-  max-width: 1100px;
+  max-width: 800px;
   margin: 0 auto;
   display: grid;
   gap: 1rem;
@@ -9,15 +9,32 @@
   margin: 0;
 }
 
-.settings-grid {
+.settings-card {
+  width: 100%;
+}
+
+.settings-fields {
   display: grid;
   gap: 1rem;
 }
 
-@media (min-width: 1024px) {
-  .settings-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: start;
-  }
+.port-field {
+  max-width: 160px;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.success {
+  color: #2e7d32;
+  margin: 0;
+}
+
+.error {
+  color: #c62828;
+  margin: 0;
 }
 

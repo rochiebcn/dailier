@@ -21,17 +21,10 @@ export const routes: Routes = [
       )
   },
   {
-    path: 'notification',
+    path: 'settings',
     loadComponent: () =>
-      import('./notification/component/notification-config/notification-config').then(
-        (m) => m.NotificationConfigComponent
-      )
-  },
-  {
-    path: 'email',
-    loadComponent: () =>
-      import('./email/component/email-config/email-config').then(
-        (m) => m.EmailConfigComponent
+      import('./settings/component/settings/settings').then(
+        (m) => m.SettingsComponent
       )
   }
 ];

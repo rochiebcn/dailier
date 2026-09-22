@@ -20,6 +20,11 @@ public class DailyEntryRepositoryAdapter implements DailyEntryRepository {
     }
 
     @Override
+    public Optional<DailyEntry> findLatest() {
+        return jpaRepository.findTopByOrderByDateDesc().map(this::toDomain);
+    }
+
+    @Override
     public Optional<DailyEntry> findByDate(String date) {
         return jpaRepository.findByDate(date).map(this::toDomain);
     }

@@ -16,13 +16,14 @@ export const config: Options.Testrunner = {
     {
       browserName: 'chrome',
       'goog:chromeOptions': {
-        args: ['--headless', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage'],
+        //args: ['--headless', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage'],
+        // args: [--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage'],
       },
     },
   ],
   logLevel: 'info',
   bail: 0,
-  baseUrl: 'http://localhost:4201',
+  baseUrl: process.env['E2E_BASE_URL'] ?? 'http://localhost:4201',
   waitforTimeout: 10000,
   connectionRetryTimeout: 120000,
   connectionRetryCount: 3,

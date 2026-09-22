@@ -1,9 +1,117 @@
 <section class="settings" data-test="settings-page">
   <h2>{{ 'settings.title' | i18n }}</h2>
 
-  <div class="settings-grid">
-    <app-notification-config></app-notification-config>
-    <app-email-config></app-email-config>
-  </div>
+  <mat-card appearance="outlined" class="settings-card">
+    <mat-card-content>
+      <form (ngSubmit)="save()" class="settings-fields">
+        <mat-form-field appearance="outline">
+          <mat-label>{{ t('email.field.mailHost') }}</mat-label>
+          <input
+            matInput
+            type="text"
+            [ngModel]="settings().mailHost"
+            (ngModelChange)="onMailHostChange($event)"
+            name="mailHost"
+            [placeholder]="t('email.placeholder.mailHost')"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="port-field">
+          <mat-label>{{ t('email.field.mailPort') }}</mat-label>
+          <input
+            matInput
+            type="number"
+            [ngModel]="settings().mailPort"
+            (ngModelChange)="onMailPortChange($event)"
+            name="mailPort"
+            min="1"
+            max="65535"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ t('email.field.address') }}</mat-label>
+          <input
+            matInput
+            type="email"
+            [ngModel]="settings().emailAddress"
+            (ngModelChange)="onEmailAddressChange($event)"
+            name="emailAddress"
+            [placeholder]="t('email.placeholder.address')"
+            required
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="time-field">
+          <mat-label>{{ t('email.field.sendTime') }}</mat-label>
+          <input
+            matInput
+            [ngxMatTimepicker]="sendTimePicker"
+            [format]="24"
+            [ngModel]="settings().sendTime"
+            (ngModelChange)="onSendTimeChange($event)"
+            name="sendTime"
+            required
+          />
+          <ngx-mat-timepicker-toggle matSuffix [for]="sendTimePicker"></ngx-mat-timepicker-toggle>
+          <ngx-mat-timepicker #sendTimePicker></ngx-mat-timepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="time-field">
+          <mat-label>{{ t('notification.field.reminderTime') }}</mat-label>
+          <input
+            matInput
+            [ngxMatTimepicker]="notificationTimePicker"
+            [format]="24"
+            [ngModel]="settings().notificationTime"
+            (ngModelChange)="onNotificationTimeChange($event)"
+            name="notificationTime"
+            required
+          />
+          <ngx-mat-timepicker-toggle matSuffix [for]="notificationTimePicker"></ngx-mat-timepicker-toggle>
+          <ngx-mat-timepicker #notificationTimePicker></ngx-mat-timepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="time-field">
+          <mat-label>{{ t('settings.field.dailyHour') }}</mat-label>
+          <input
+            matInput
+            [ngxMatTimepicker]="dailyHourPicker"
+            [format]="24"
+            [ngModel]="settings().dailyHour"
+            (ngModelChange)="onDailyHourChange($event)"
+            name="dailyHour"
+            required
+          />
+          <ngx-mat-timepicker-toggle matSuffix [for]="dailyHourPicker"></ngx-mat-timepicker-toggle>
+          <ngx-mat-timepicker #dailyHourPicker></ngx-mat-timepicker>
+        </mat-form-field>
+
+        <div class="actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="isSaving()">
+            {{ isSaving() ? t('common.saving') : t('common.save') }}
+          </button>
+
+          <button mat-stroked-button color="accent" type="button" (click)="sendNow()" [disabled]="isSending()">
+            <mat-icon>send</mat-icon>
+            {{ isSending() ? t('dailyList.send.sending') : t('email.sendNow') }}
+          </button>
+        </div>
+
+        @if (savedSuccessfully()) {
+          <p class="success">{{ t('settings.saved') }}</p>
+        }
+        @if (sendResult() === 'success') {
+          <p class="success">{{ t('email.send.success') }}</p>
+        }
+        @if (sendResult() === 'not-found') {
+          <p class="error">{{ t('email.send.notFound') }}</p>
+        }
+        @if (sendError()) {
+          <p class="error">{{ t('email.send.failedPrefix') }} <code>{{ sendError() || t('email.send.unknownError') }}</code></p>
+        }
+      </form>
+    </mat-card-content>
+  </mat-card>
 </section>
 

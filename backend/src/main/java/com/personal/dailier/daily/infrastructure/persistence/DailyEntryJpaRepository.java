@@ -6,6 +6,8 @@ import java.util.Optional;
 
 public interface DailyEntryJpaRepository extends JpaRepository<DailyEntryEntity, Long> {
 
+    Optional<DailyEntryEntity> findTopByOrderByDateDesc();
+
     Optional<DailyEntryEntity> findByDate(String date);
 }
 

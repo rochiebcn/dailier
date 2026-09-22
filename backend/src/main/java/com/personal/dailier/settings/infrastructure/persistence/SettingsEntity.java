@@ -39,5 +39,11 @@ public class SettingsEntity {
 
     @Column(name = "email_address")
     private String emailAddress;
+
+    @Column(name = "mail_host")
+    private String mailHost;
+
+    @Column(name = "mail_port")
+    private Integer mailPort;
 }
 

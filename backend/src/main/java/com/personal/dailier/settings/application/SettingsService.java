@@ -33,7 +33,9 @@ public class SettingsService implements SettingsUseCase {
                 settings.notificationTime(),
                 settings.dailyHour(),
                 settings.sendTime(),
-                settings.emailAddress()
+                settings.emailAddress(),
+                settings.mailHost(),
+                settings.mailPort()
         ));
     }
 }

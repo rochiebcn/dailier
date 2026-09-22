@@ -84,6 +84,7 @@ describe('DailyFormComponent', () => {
     expect((component as any).entry.date).toBe('2026-05-27');
     expect((component as any).selectedDate.toISOString().startsWith('2026-05-27')).toBe(true);
     expect((component as any).isEditingExisting()).toBe(false);
+    expect((component as any).showTomorrowNotice()).toBe(true);
   });
 
   it('keeps today when the current time is exactly dailyHour', () => {
@@ -109,6 +110,7 @@ describe('DailyFormComponent', () => {
     expect(dailyService.getByDate).toHaveBeenNthCalledWith(2, '2026-05-26');
     expect((component as any).entry.date).toBe('2026-05-26');
     expect((component as any).isEditingExisting()).toBe(false);
+    expect((component as any).showTomorrowNotice()).toBe(false);
   });
 
   it('falls back to today when settings cannot be loaded', () => {
@@ -122,6 +124,47 @@ describe('DailyFormComponent', () => {
     expect(dailyService.getByDate).toHaveBeenNthCalledWith(1, '2026-05-25');
     expect(dailyService.getByDate).toHaveBeenNthCalledWith(2, '2026-05-26');
     expect((component as any).entry.date).toBe('2026-05-26');
+    expect((component as any).showTomorrowNotice()).toBe(false);
+  });
+
+  it('hides the tomorrow notice when a daily for tomorrow already exists', () => {
+    vi.setSystemTime(new Date('2026-05-26T11:30:00'));
+    settingsService.get.mockReturnValue(of({
+      notificationTime: '17:00',
+      dailyHour: '10:00',
+      sendTime: '08:00',
+      emailAddress: 'team@example.com',
+    }));
+    dailyService.getByDate.mockImplementation((requestedDate: string) => {
+      if (requestedDate === '2026-05-26') {
+        return of({
+          id: 10,
+          date: '2026-05-26',
+          didYesterday: 'Closed PRs',
+          willDoToday: 'Prepare tomorrow daily',
+          blockers: '',
+        });
+      }
+
+      if (requestedDate === '2026-05-27') {
+        return of({
+          id: 12,
+          date: '2026-05-27',
+          didYesterday: 'Reviewed backlog',
+          willDoToday: 'Ship release',
+          blockers: '',
+        });
+      }
+
+      return throwError(() => ({ status: 404 }));
+    });
+
+    const component = createComponent();
+    component.ngOnInit();
+
+    expect((component as any).isEditingExisting()).toBe(true);
+    expect((component as any).showTomorrowNotice()).toBe(false);
+    expect((component as any).entry.date).toBe('2026-05-27');
   });
 });
 

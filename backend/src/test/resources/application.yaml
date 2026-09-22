@@ -16,7 +16,5 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
   mail:
-    host: localhost
-    port: 25
     from: test@test.com
 

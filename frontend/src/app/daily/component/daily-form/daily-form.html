@@ -1,0 +1,99 @@
+<div class="daily-form" data-test="daily-form">
+  <mat-card appearance="outlined" class="daily-card">
+    <mat-card-header>
+      <mat-card-title>{{ 'dailyForm.title' | i18n: { date: formatDisplayDate(entry.date) } }}</mat-card-title>
+      @if (isEditingExisting()) {
+        <mat-card-subtitle class="editing-badge" data-test="editing-badge">
+          <mat-icon class="editing-icon">edit</mat-icon>
+          {{ 'dailyForm.editingExisting' | i18n }}
+        </mat-card-subtitle>
+      }
+
+      @if (showTomorrowNotice()) {
+        <mat-card-subtitle class="tomorrow-notice" data-test="tomorrow-notice">
+          <mat-icon class="editing-icon">schedule</mat-icon>
+          {{ 'dailyForm.creatingTomorrow' | i18n }}
+        </mat-card-subtitle>
+      }
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (previousEntry()) {
+        <mat-card appearance="outlined" class="previous-daily" data-test="previous-entry-card">
+          <mat-card-title>{{ 'dailyForm.previousTitle' | i18n }}</mat-card-title>
+          <p class="prev-date">{{ formatDisplayDate(previousEntry()!.date) }}</p>
+          <p><strong>{{ 'dailyForm.previous.did' | i18n }}</strong></p>
+          <span class="multiline-value">{{ previousEntry()!.didYesterday }}</span>
+          <p><strong>{{ 'dailyForm.previous.willDo' | i18n }}</strong></p>
+          <span class="multiline-value">{{ previousEntry()!.willDoToday }}</span>
+          <p><strong>{{ 'dailyForm.previous.blockers' | i18n }}</strong></p>
+          <span class="multiline-value">{{ previousEntry()!.blockers || '' }}</span>
+        </mat-card>
+      }
+
+      <form (ngSubmit)="save()" class="daily-fields" data-test="daily-form-fields">
+        <mat-form-field appearance="outline" class="date-field">
+          <mat-label>{{ 'dailyForm.field.date' | i18n }}</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            [ngModel]="selectedDate"
+            (ngModelChange)="onDateChange($event)"
+            name="date"
+            required
+            data-test="input-date"
+          />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ didYesterdayLabelKey() | i18n }}</mat-label>
+          <textarea matInput [(ngModel)]="entry.didYesterday" name="didYesterday" rows="4" required data-test="input-did-yesterday"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'dailyForm.field.willDoToday' | i18n }}</mat-label>
+          <textarea matInput [(ngModel)]="entry.willDoToday" name="willDoToday" rows="4" required data-test="input-will-do-today"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'dailyForm.field.blockers' | i18n }}</mat-label>
+          <textarea matInput [(ngModel)]="entry.blockers" name="blockers" rows="2" data-test="input-blockers"></textarea>
+        </mat-form-field>
+
+        <div class="actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="isSaving() || isSendingAndSaving()" data-test="btn-submit">
+            @if (isSaving()) {
+              <mat-spinner diameter="18"></mat-spinner>
+            }
+            <span
+              data-test="btn-submit-label">{{ isSaving() ? ('common.saving' | i18n) : (isEditingExisting() ? ('dailyForm.action.update' | i18n) : ('dailyForm.action.save' | i18n)) }}</span>
+          </button>
+
+          <button mat-stroked-button color="accent" type="button" (click)="saveAndSend()" [disabled]="isSaving() || isSendingAndSaving()" data-test="btn-send">
+            @if (isSendingAndSaving()) {
+              <mat-spinner diameter="18"></mat-spinner>
+            } @else {
+              <mat-icon>send</mat-icon>
+            }
+            <span data-test="btn-send-label">{{ isSendingAndSaving() ? ('dailyForm.send.sending' | i18n) : ('dailyForm.action.sendAndSave' | i18n) }}</span>
+          </button>
+        </div>
+
+        @if (savedSuccessfully()) {
+          <p class="success" data-test="success-message">{{ isEditingExisting() ? ('dailyForm.success.updated' | i18n) : ('dailyForm.success.saved' | i18n) }}</p>
+        }
+        @if (sendAndSaveResult() === 'success') {
+          <p class="success" data-test="send-success-message">{{ 'dailyForm.send.success' | i18n }}</p>
+        }
+        @if (sendAndSaveResult() === 'not-found') {
+          <p class="error" data-test="send-not-found-message">{{ 'dailyForm.send.notFound' | i18n }}</p>
+        }
+        @if (sendAndSaveResult() === 'error') {
+          <p class="error" data-test="send-error-message">{{ 'dailyForm.send.error' | i18n }}@if (sendAndSaveError()) { <code>{{ sendAndSaveError() }}</code>}</p>
+        }
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

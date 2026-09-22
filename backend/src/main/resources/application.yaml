@@ -16,16 +16,4 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
   mail:
-    host: ${MAIL_HOST:smtp.gmail.com}
-    port: ${MAIL_PORT:587}
-    username: ${MAIL_USERNAME:}
-    password: ${MAIL_PASSWORD:}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-  docker:
-    compose:
-      enabled: false
+    from: ${MAIL_FROM:yourdaily@dailier.com}

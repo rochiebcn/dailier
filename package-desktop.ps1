@@ -2,13 +2,8 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 
-npm --prefix "$repoRoot\desktop" install
+& "$repoRoot\mvnw.cmd" -Pdesktop-dist -DskipTests package
 if ($LASTEXITCODE -ne 0) {
-  throw 'Fallo npm install en desktop.'
-}
-
-npm --prefix "$repoRoot\desktop" run package:win
-if ($LASTEXITCODE -ne 0) {
-  throw 'Fallo el empaquetado Windows en desktop.'
+  throw 'The Maven desktop packaging build failed.'
 }
 

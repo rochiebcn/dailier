@@ -1,9 +1,9 @@
 <div class="daily-list">
   <div class="list-header">
-    <h2 class="list-title">All dailies</h2>
+    <h2 class="list-title">{{ 'dailyList.title' | i18n }}</h2>
     <button mat-raised-button color="primary" routerLink="/daily">
       <mat-icon>edit</mat-icon>
-      Write today's daily
+      {{ 'dailyList.writeToday' | i18n }}
     </button>
   </div>
 
@@ -14,8 +14,8 @@
   } @else if (entries().length === 0) {
     <div class="empty-state">
       <mat-icon class="empty-icon">event_note</mat-icon>
-      <p>No daily entries yet.</p>
-      <button mat-stroked-button color="primary" routerLink="/daily">Write your first daily</button>
+      <p>{{ 'dailyList.empty' | i18n }}</p>
+      <button mat-stroked-button color="primary" routerLink="/daily">{{ 'dailyList.writeFirst' | i18n }}</button>
     </div>
   } @else {
     <mat-accordion multi>
@@ -23,32 +23,78 @@
         <mat-expansion-panel class="entry-panel">
           <mat-expansion-panel-header>
             <mat-panel-title class="panel-title">
-              <span class="entry-date">{{ entry.date }}</span>
+              <span class="entry-date">{{ formatDisplayDate(entry.date) }}</span>
               @if (entry.blockers) {
-                <mat-chip class="blocker-chip" color="warn">⚠ Blocker</mat-chip>
+                <mat-chip class="blocker-chip" color="warn">{{ 'dailyList.blockerChip' | i18n }}</mat-chip>
               }
             </mat-panel-title>
           </mat-expansion-panel-header>
 
           <div class="entry-content">
             <section class="entry-section">
-              <h4 class="section-label">✅ What did I do yesterday?</h4>
+              <h4 class="section-label">{{ 'dailyList.section.did' | i18n }}</h4>
               <p class="section-text">{{ entry.didYesterday }}</p>
             </section>
             <section class="entry-section">
-              <h4 class="section-label">🎯 What will I do today?</h4>
+              <h4 class="section-label">{{ 'dailyList.section.willDo' | i18n }}</h4>
               <p class="section-text">{{ entry.willDoToday }}</p>
             </section>
             @if (entry.blockers) {
               <section class="entry-section">
-                <h4 class="section-label">🚧 Blockers</h4>
+                <h4 class="section-label">{{ 'dailyList.section.blockers' | i18n }}</h4>
                 <p class="section-text">{{ entry.blockers }}</p>
               </section>
             }
+
+            <div class="entry-actions">
+              <button
+                mat-stroked-button
+                type="button"
+                (click)="togglePreview(entry.date)"
+              >
+                <mat-icon>preview</mat-icon>
+                <span>{{ previewDate() === entry.date ? ('dailyList.preview.hide' | i18n) : ('dailyList.preview.show' | i18n) }}</span>
+              </button>
+
+              @if (previewDate() === entry.date) {
+                <div class="preview-box">
+                  <p class="preview-title">{{ 'dailyList.preview.copy' | i18n }}</p>
+                  <textarea readonly>{{ formatDailyPreview(entry) }}</textarea>
+                </div>
+              }
+
+              <button
+                mat-stroked-button
+                color="primary"
+                type="button"
+                [disabled]="sendingDate() === entry.date"
+                (click)="sendDailyByEmail(entry.date)"
+              >
+                @if (sendingDate() === entry.date) {
+                  <mat-spinner diameter="18" />
+                } @else {
+                  <mat-icon>send</mat-icon>
+                }
+                <span>
+                  {{ sendingDate() === entry.date ? ('dailyList.send.sending' | i18n) : ('dailyList.send.action' | i18n) }}
+                </span>
+              </button>
+
+              @if (sendFeedback()?.date === entry.date && sendFeedback()?.status === 'success') {
+                <p class="feedback success">{{ 'dailyList.send.success' | i18n }}</p>
+              }
+
+              @if (sendFeedback()?.date === entry.date && sendFeedback()?.status === 'not-found') {
+                <p class="feedback error">{{ 'dailyList.send.notFound' | i18n }}</p>
+              }
+
+              @if (sendFeedback()?.date === entry.date && sendFeedback()?.status === 'error') {
+                <p class="feedback error">{{ 'dailyList.send.error' | i18n }}</p>
+              }
+            </div>
           </div>
         </mat-expansion-panel>
       }
     </mat-accordion>
   }
 </div>
-

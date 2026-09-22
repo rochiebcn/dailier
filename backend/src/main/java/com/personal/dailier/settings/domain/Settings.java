@@ -6,7 +6,9 @@ public record Settings(
         String notificationTime,
         String dailyHour,
         String sendTime,
-        String emailAddress
+        String emailAddress,
+        String mailHost,
+        Integer mailPort
 ) {
 }
 

@@ -9,24 +9,27 @@
 
         <sql>
             DELETE FROM settings
-            WHERE id NOT IN (
-                SELECT MIN(id) FROM settings
+            WHERE id NOT IN (SELECT MIN(id) FROM settings);
+
+            CREATE TABLE settings_new (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                user_id VARCHAR(100) NOT NULL UNIQUE,
+                send_time VARCHAR(5),
+                email_address VARCHAR(255),
+                notification_time VARCHAR(5),
+                daily_hour VARCHAR(5)
             );
+
+            INSERT INTO settings_new (id, user_id, send_time, email_address, notification_time, daily_hour)
+            SELECT id, 'USER_ID', send_time, email_address, notification_time, daily_hour
+            FROM settings;
+
+            DROP TABLE settings;
+            ALTER TABLE settings_new RENAME TO settings;
         </sql>
-
-        <addColumn tableName="settings">
-            <column name="user_id" type="VARCHAR(100)" defaultValue="USER_ID"/>
-        </addColumn>
-
-        <update tableName="settings">
-            <column name="user_id" value="USER_ID"/>
-            <where>user_id IS NULL OR TRIM(user_id) = ''</where>
-        </update>
-
-        <addNotNullConstraint tableName="settings" columnName="user_id" columnDataType="VARCHAR(100)"/>
-        <addUniqueConstraint tableName="settings" columnNames="user_id" constraintName="uk_settings_user_id"/>
 
     </changeSet>
 
 </databaseChangeLog>
+
 

@@ -9,6 +9,8 @@ public interface DailyEntryRepository {
 
     List<DailyEntry> findAll();
 
+    Optional<DailyEntry> findLatest();
+
     Optional<DailyEntry> findByDate(String date);
 
     Optional<DailyEntry> findById(Long id);

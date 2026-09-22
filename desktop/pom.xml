@@ -19,52 +19,51 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>${exec-maven-plugin.version}</version>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
-                        <id>desktop-npm-ci</id>
+                        <id>desktop-npm-install</id>
                         <phase>generate-resources</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>run</goal>
                         </goals>
                         <configuration>
-                            <workingDirectory>${project.basedir}</workingDirectory>
-                            <executable>${npm.executable}</executable>
-                            <arguments>
-                                <argument>ci</argument>
-                            </arguments>
+                            <target>
+                                <exec executable="${npm.executable}" dir="${project.basedir}" failonerror="true">
+                                    <arg value="install"/>
+                                </exec>
+                            </target>
                         </configuration>
                     </execution>
                     <execution>
                         <id>desktop-prepare-bundle</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>run</goal>
                         </goals>
                         <configuration>
-                            <workingDirectory>${project.basedir}</workingDirectory>
-                            <executable>${npm.executable}</executable>
-                            <arguments>
-                                <argument>run</argument>
-                                <argument>prepare:bundle:skip-build</argument>
-                            </arguments>
+                            <target>
+                                <exec executable="${npm.executable}" dir="${project.basedir}" failonerror="true">
+                                    <arg value="run"/>
+                                    <arg value="prepare:bundle:skip-build"/>
+                                </exec>
+                            </target>
                         </configuration>
                     </execution>
                     <execution>
                         <id>desktop-verify</id>
                         <phase>verify</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>run</goal>
                         </goals>
                         <configuration>
-                            <workingDirectory>${project.basedir}</workingDirectory>
-                            <executable>${npm.executable}</executable>
-                            <arguments>
-                                <argument>run</argument>
-                                <argument>verify</argument>
-                            </arguments>
+                            <target>
+                                <exec executable="${npm.executable}" dir="${project.basedir}" failonerror="true">
+                                    <arg value="run"/>
+                                    <arg value="verify"/>
+                                </exec>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>
@@ -78,23 +77,39 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <version>${exec-maven-plugin.version}</version>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>3.1.0</version>
                         <executions>
+                            <execution>
+                                <id>desktop-clean-dist-output</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <exec executable="taskkill" osfamily="windows" failonerror="false" failifexecutionfails="false">
+                                            <arg value="/IM"/>
+                                            <arg value="Dailier.exe"/>
+                                            <arg value="/F"/>
+                                        </exec>
+                                        <delete dir="${project.basedir}/dist" includeemptydirs="true" quiet="true"/>
+                                    </target>
+                                </configuration>
+                            </execution>
                             <execution>
                                 <id>desktop-package-windows-installer</id>
                                 <phase>package</phase>
                                 <goals>
-                                    <goal>exec</goal>
+                                    <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <workingDirectory>${project.basedir}</workingDirectory>
-                                    <executable>${npm.executable}</executable>
-                                    <arguments>
-                                        <argument>run</argument>
-                                        <argument>package:win:skip-build</argument>
-                                    </arguments>
+                                    <target>
+                                        <exec executable="${npm.executable}" dir="${project.basedir}" failonerror="true">
+                                            <arg value="run"/>
+                                            <arg value="package:win:skip-build"/>
+                                        </exec>
+                                    </target>
                                 </configuration>
                             </execution>
                         </executions>

@@ -74,6 +74,61 @@
   padding-top: 0.5rem;
 }
 
+.entry-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+.preview-box {
+  width: 100%;
+  background: #f8f9fc;
+  border: 1px solid #dce1ea;
+  border-radius: 10px;
+  padding: 0.75rem;
+}
+
+.preview-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #455065;
+}
+
+.preview-box textarea {
+  width: 100%;
+  min-height: 170px;
+  border: 1px solid #c8d0df;
+  border-radius: 8px;
+  padding: 0.6rem;
+  font-size: 0.9rem;
+  font-family: 'Consolas', 'Courier New', monospace;
+  line-height: 1.45;
+  box-sizing: border-box;
+  resize: vertical;
+  background: #fff;
+}
+
+.feedback {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.feedback.success {
+  color: #2e7d32;
+}
+
+.feedback.error {
+  color: #b3261e;
+}
+
 .entry-section {
   .section-label {
     margin: 0 0 0.25rem;

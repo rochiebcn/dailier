@@ -2,3 +2,7 @@ Steps for E2E testing with WebdriverIO and MCP:
 1. **Open Chrome**: Start by launching the Chrome browser using WebdriverIO. Ensure that you have the necessary WebDriver and browser drivers installed and configured.
 2. **Go to dailier app**: Navigate to the URL where your Dailier application is running `http://localhost:4201`.
 3. **Verify page load**: Wait for the page to load completely. You can check for the presence of a specific element that indicates the page has loaded, such as a header or a unique identifier.
+4. **Identify components**: Use the browser's developer tools to inspect the DOM and identify the components you want to interact with in your tests. Look for unique identifiers such as `id`, `class`, or `data-testid` attributes that can be used to select elements in your test scripts.
+5. **Write PO (Page Object) classes**: Create Page Object classes in your test suite to encapsulate the interactions with the identified components. This will help you maintain a clean and organized test codebase. Each Page Object class should represent a specific page or component of your application and contain methods for interacting with it.
+6. **Implement test cases**: Use the Page Object classes to write your test cases. This will allow you to perform actions such as clicking buttons, filling out forms, and verifying the expected outcomes in a structured and reusable way.
+7. **Close session**: After your tests have run, make sure to close the browser session to free up resources.

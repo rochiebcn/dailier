@@ -1,42 +1,43 @@
 # Dailier
 
-Aplicación de escritorio para preparar el *daily scrum* con antelación y enviarlo automáticamente por correo a la hora configurada.
+Desktop application for preparing your *daily scrum* in advance and sending it automatically by email at the configured time.
 
-## Estructura básica del proyecto
+## Basic project structure
 
 ```text
-backend/    Backend Spring Boot + SQLite + Liquibase
-frontend/   Aplicación Angular 21
-desktop/    Envoltorio Electron y empaquetado del distributable
-.docs/      No existe: la documentación funcional real está en docs/
-docs/       Especificaciones funcionales y notas de trabajo
+backend/    Spring Boot backend + SQLite + Liquibase
+frontend/   Angular 21 application
+desktop/    Electron wrapper and distributable packaging
+docs/       Functional specifications and working notes
 ```
 
-### Módulos principales
+### Main modules
 
 - `backend/`
-  - API REST en Spring Boot.
-  - Persistencia en SQLite.
-  - Migraciones con Liquibase.
-  - Código organizado por funcionalidades.
+  - REST API built with Spring Boot.
+  - SQLite persistence.
+  - Liquibase migrations.
+  - Code organized by feature.
 - `frontend/`
-  - Aplicación Angular standalone.
-  - Consume el backend vía `/api/*`.
+  - Standalone Angular application.
+  - Consumes the backend through `/api/*`.
 - `desktop/`
-  - Ejecuta la app como escritorio con Electron.
-  - Embebe el `jar` del backend y el build del frontend.
-  - Genera el instalador para Windows.
+  - Runs the app as a desktop application with Electron.
+  - Bundles the backend `jar` and the frontend build.
+  - Generates the Windows installer.
+- `pom.xml`
+  - Maven entry point for backend, frontend build orchestration, and desktop packaging.
 - `package-desktop.ps1`
-  - Script de conveniencia para generar el instalador desde la raíz.
+  - Convenience script to generate the installer from the repository root.
 
-## Requisitos
+## Requirements
 
 - Java 25
-- Node.js 20.19+ o 22.12+
+- Node.js 20.19+ or 22.12+
 - npm
-- Windows PowerShell para usar `package-desktop.ps1`
+- Windows PowerShell to use `package-desktop.ps1`
 
-## Desarrollo local
+## Local development
 
 ### Backend
 
@@ -52,66 +53,83 @@ npm install
 npm start
 ```
 
-## Cómo generar el fichero distributable
+## Maven build entry points
 
-El distributable de Windows se genera desde el módulo `desktop/` usando Electron Builder.
+### Build the whole project
 
-### Opción recomendada desde la raíz
+```powershell
+./mvnw.cmd package -DskipTests
+```
+
+This command:
+
+1. Packages the Spring Boot backend.
+2. Installs frontend dependencies and builds the Angular app.
+3. Installs desktop dependencies.
+4. Prepares the Electron bundle in `desktop/app/` using the Maven-built artifacts.
+
+### Generate the Windows distributable with Maven
+
+```powershell
+./mvnw.cmd package -Pdesktop-dist -DskipTests
+```
+
+This does everything from the full project build and also runs Electron Builder to produce the Windows installer in `desktop/dist/`.
+
+## How to generate the distributable file
+
+The Windows distributable is generated from the `desktop/` module using Electron Builder.
+
+### Recommended option from the repository root
 
 ```powershell
 ./package-desktop.ps1
 ```
 
-Este script hace lo siguiente:
+This script is a shortcut for the Maven packaging profile above and does the following:
 
-1. Instala dependencias de `desktop/`.
-2. Ejecuta `npm --prefix desktop run package:win`.
-3. Durante ese proceso se llama a `desktop/scripts/prepare-bundle.mjs`, que:
-   - compila el backend con Maven,
-   - compila el frontend con Angular,
-   - copia ambos artefactos a `desktop/app/`.
-4. `electron-builder` genera el instalador en `desktop/dist/`.
+1. Packages the backend with Maven.
+2. Builds the frontend through Maven-driven npm executions.
+3. Prepares the Electron app bundle in `desktop/app/`.
+4. Generates the Windows installer in `desktop/dist/`.
 
-### Opción manual
+### Manual option
 
 ```powershell
-Set-Location .\desktop
-npm install
-npm run package:win
+./mvnw.cmd package -Pdesktop-dist -DskipTests
 ```
 
-## Artefactos generados
+## Generated artifacts
 
-- Bundle preparado para Electron: `desktop/app/`
-- Instalador/directorio de salida: `desktop/dist/`
-- JAR backend: `backend/target/`
-- Build frontend: `frontend/dist/`
+- Electron-ready bundle: `desktop/app/`
+- Installer/output directory: `desktop/dist/`
+- Backend JAR: `backend/target/`
+- Frontend build: `frontend/dist/`
 
-## Comandos útiles
+## Useful commands
 
-### Ejecutar tests del backend
+### Run backend tests
 
 ```powershell
 ./mvnw.cmd test -pl backend -q
 ```
 
-### Construir solo el frontend
+### Build only the frontend
 
 ```powershell
-Set-Location .\frontend
-npm run build
+./mvnw.cmd compile -pl frontend
 ```
 
-### Verificar el módulo desktop
+### Verify the desktop module
 
 ```powershell
-Set-Location .\desktop
-npm run verify
+./mvnw.cmd verify -pl desktop -DskipTests
 ```
 
-## Documentación adicional
+## Additional documentation
 
-- `desktop/README.md`: detalles del empaquetado Electron.
-- `docs/`: especificaciones funcionales.
-- `AGENTS.md`: guía técnica general del repositorio.
+- `desktop/README.md`: Electron packaging details.
+- `docs/`: functional specifications.
+- `AGENTS.md`: general technical guidance for the repository.
+
 

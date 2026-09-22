@@ -5,5 +5,7 @@ export interface Settings {
   dailyHour: string;
   sendTime: string;
   emailAddress: string;
+  mailHost?: string;
+  mailPort?: number;
 }
 

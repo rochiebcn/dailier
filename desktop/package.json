@@ -1,0 +1,61 @@
+{
+  "name": "dailier-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Dailier",
+  "description": "Electron desktop module for Dailier",
+  "main": "main.js",
+  "scripts": {
+    "generate:icon": "node ./scripts/generate-icon.mjs",
+    "prepare:bundle": "npm run generate:icon && node ./scripts/prepare-bundle.mjs",
+    "prepare:bundle:skip-build": "npm run generate:icon && node ./scripts/prepare-bundle.mjs --skip-build",
+    "start": "npm run prepare:bundle && electron .",
+    "package:dir": "npm run prepare:bundle && electron-builder --dir",
+    "package:dir:skip-build": "npm run prepare:bundle:skip-build && electron-builder --dir",
+    "package:win": "npm run prepare:bundle && set CSC_IDENTITY_AUTO_DISCOVERY=false && electron-builder --win nsis",
+    "package:win:skip-build": "npm run prepare:bundle:skip-build && set CSC_IDENTITY_AUTO_DISCOVERY=false && electron-builder --win nsis",
+    "package:win:signed": "npm run prepare:bundle && electron-builder --win nsis",
+    "verify": "node --check ./main.js && node --check ./preload.js && node ./scripts/prepare-bundle.mjs --dry-run"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "electron": "^39.8.5",
+    "electron-builder": "^26.0.12",
+    "png-to-ico": "^3.0.2",
+    "sharp": "^0.35.3"
+  },
+  "build": {
+    "icon": "assets/icon.ico",
+    "appId": "com.personal.dailier",
+    "productName": "Dailier",
+    "copyright": "Copyright (c) 2026 Dailier",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "artifactName": "${productName}-Setup-${version}.${ext}",
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "app",
+        "to": "app"
+      }
+    ],
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "license": "build/license.rtf"
+    }
+  }
+}
