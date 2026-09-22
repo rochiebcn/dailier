@@ -1,0 +1,21 @@
+<mat-toolbar class="app-header" color="primary">
+  <span class="app-title">{{ title }}</span>
+
+  <div class="toolbar-actions">
+    <nav>
+      <button mat-button routerLink="/daily" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">{{ 'app.nav.daily' | i18n }}</button>
+      <button mat-button routerLink="/daily-list" routerLinkActive="active">{{ 'app.nav.history' | i18n }}</button>
+      <button mat-button routerLink="/notification" routerLinkActive="active">{{ 'app.nav.notification' | i18n }}</button>
+      <button mat-button routerLink="/email" routerLinkActive="active">{{ 'app.nav.email' | i18n }}</button>
+    </nav>
+
+    <div class="language-switcher" aria-label="Language">
+      <button mat-button [class.active]="i18n.language() === 'en'" (click)="changeLanguage('en')">{{ 'app.lang.en' | i18n }}</button>
+      <button mat-button [class.active]="i18n.language() === 'es'" (click)="changeLanguage('es')">{{ 'app.lang.es' | i18n }}</button>
+    </div>
+  </div>
+</mat-toolbar>
+
+<main class="app-content">
+  <router-outlet />
+</main>

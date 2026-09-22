@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: dailier
+  datasource:
+    url: jdbc:sqlite:file::memory:?cache=shared
+    driver-class-name: org.sqlite.JDBC
+    hikari:
+      maximum-pool-size: 1
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.community.dialect.SQLiteDialect
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+  mail:
+    host: localhost
+    port: 25
+    from: test@test.com
+

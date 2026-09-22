@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
+
+    <changeSet id="003" author="dailier">
+
+        <sql>
+            DELETE FROM settings
+            WHERE id NOT IN (
+                SELECT MIN(id) FROM settings
+            );
+        </sql>
+
+        <addColumn tableName="settings">
+            <column name="user_id" type="VARCHAR(100)" defaultValue="USER_ID"/>
+        </addColumn>
+
+        <update tableName="settings">
+            <column name="user_id" value="USER_ID"/>
+            <where>user_id IS NULL OR TRIM(user_id) = ''</where>
+        </update>
+
+        <addNotNullConstraint tableName="settings" columnName="user_id" columnDataType="VARCHAR(100)"/>
+        <addUniqueConstraint tableName="settings" columnNames="user_id" constraintName="uk_settings_user_id"/>
+
+    </changeSet>
+
+</databaseChangeLog>
+

@@ -1,0 +1,54 @@
+<div class="daily-list">
+  <div class="list-header">
+    <h2 class="list-title">All dailies</h2>
+    <button mat-raised-button color="primary" routerLink="/daily">
+      <mat-icon>edit</mat-icon>
+      Write today's daily
+    </button>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading">
+      <mat-spinner diameter="40" />
+    </div>
+  } @else if (entries().length === 0) {
+    <div class="empty-state">
+      <mat-icon class="empty-icon">event_note</mat-icon>
+      <p>No daily entries yet.</p>
+      <button mat-stroked-button color="primary" routerLink="/daily">Write your first daily</button>
+    </div>
+  } @else {
+    <mat-accordion multi>
+      @for (entry of entries(); track entry.date) {
+        <mat-expansion-panel class="entry-panel">
+          <mat-expansion-panel-header>
+            <mat-panel-title class="panel-title">
+              <span class="entry-date">{{ entry.date }}</span>
+              @if (entry.blockers) {
+                <mat-chip class="blocker-chip" color="warn">⚠ Blocker</mat-chip>
+              }
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="entry-content">
+            <section class="entry-section">
+              <h4 class="section-label">✅ What did I do yesterday?</h4>
+              <p class="section-text">{{ entry.didYesterday }}</p>
+            </section>
+            <section class="entry-section">
+              <h4 class="section-label">🎯 What will I do today?</h4>
+              <p class="section-text">{{ entry.willDoToday }}</p>
+            </section>
+            @if (entry.blockers) {
+              <section class="entry-section">
+                <h4 class="section-label">🚧 Blockers</h4>
+                <p class="section-text">{{ entry.blockers }}</p>
+              </section>
+            }
+          </div>
+        </mat-expansion-panel>
+      }
+    </mat-accordion>
+  }
+</div>
+
