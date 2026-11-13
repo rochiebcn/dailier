@@ -8,7 +8,7 @@ applyTo: "backend/**"
 
 | Layer | Technology |
 |---|---|
-| Language | Java 25 |
+| Language | Java 21 |
 | Framework | Spring Boot 4.0.6 |
 | Build | Maven Wrapper (`./mvnw.cmd`) |
 | Database | SQLite via `org.xerial:sqlite-jdbc` |

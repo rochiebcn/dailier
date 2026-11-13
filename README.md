@@ -32,7 +32,7 @@ docs/       Functional specifications and working notes
 
 ## Requirements
 
-- Java 25
+- Java 21
 - Node.js 20.19+ or 22.12+
 - npm
 - Windows PowerShell to use `package-desktop.ps1`

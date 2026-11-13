@@ -14,7 +14,7 @@ Main flows:
 | Layer | Technology |
 |---|---|
 | Frontend | Angular 21 + RxJS |
-| Backend | Java 25 � Spring Boot 4.0.6 � Maven Wrapper |
+| Backend | Java 21 � Spring Boot 4.0.6 � Maven Wrapper |
 | Database | SQLite (`org.xerial:sqlite-jdbc`) |
 | Backend architecture | Hexagonal (ports and adapters) |
 | Desktop packaging | Electron (wraps frontend + backend) |
@@ -241,7 +241,7 @@ cd frontend && npm test
 - The project is a **Maven multi-module** workspace: root `pom.xml` (`dailier-parent`, `packaging=pom`) declares one Maven module ? `backend` (`dailier-backend`). The `frontend/` directory is a standalone Node.js project, not a Maven module.
 - All backend Java sources live under `backend/src/`. All backend resources (YAML, Liquibase) live under `backend/src/main/resources/`.
 - Run Maven commands from the root using `./mvnw.cmd` (wrapper is at root). To target only the backend, use `-pl backend` or `cd backend && ../mvnw.cmd`.
-- `pom.xml` originally declared Java 17; **updated to Java 25** to align with the actual runtime (`java 25.0.2` detected during test execution).
+- `pom.xml` originally declared Java 17; **updated to Java 21** (LTS).
 - Treat this repo as *feature-driven*: each new feature must follow the hexagonal pattern described in the Architecture section.
 - Do not assume existing persistence schema ? always add a new Liquibase changeset for schema changes.
 - The AI-guidance glob search (`**/{.github/copilot-instructions.md,AGENT.md,AGENTS.md,...}`) was run and only found this file.
